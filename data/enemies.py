@@ -14,6 +14,7 @@ class EnemyTemplate:
     abilities: list[str]
     ascii_art: str
     flavor_text: str
+    is_boss: bool = False
 
 
 ENEMY_TEMPLATES = {
@@ -427,6 +428,7 @@ ENEMY_TEMPLATES = {
             "    _|| ||_ "
         ),
         flavor_text="The fat goblin king sits on a throne of stolen goods, crown askew.",
+        is_boss=True,
     ),
     "Spider Queen": EnemyTemplate(
         name="Spider Queen",
@@ -454,6 +456,7 @@ ENEMY_TEMPLATES = {
             "       '  '"
         ),
         flavor_text="A monstrous spider the size of an ox, dripping venom from its fangs.",
+        is_boss=True,
     ),
     "Bone Dragon": EnemyTemplate(
         name="Bone Dragon",
@@ -482,6 +485,7 @@ ENEMY_TEMPLATES = {
             "    ||    ||"
         ),
         flavor_text="An enormous skeletal dragon rises, unholy fire blazing in its empty sockets.",
+        is_boss=True,
     ),
     "Demon Lord": EnemyTemplate(
         name="Demon Lord",
@@ -514,6 +518,7 @@ ENEMY_TEMPLATES = {
             "    /______\\  "
         ),
         flavor_text="The lord of the abyss materializes, reality warping around his massive form.",
+        is_boss=True,
     ),
 }
 

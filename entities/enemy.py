@@ -16,6 +16,7 @@ class Enemy(Entity):
     abilities: list[str] = field(default_factory=list)
     ascii_art: str = ""
     flavor_text: str = ""
+    is_boss: bool = False
 
     @classmethod
     def from_template(
@@ -43,6 +44,7 @@ class Enemy(Entity):
             abilities=list(template.abilities),
             ascii_art=template.ascii_art,
             flavor_text=template.flavor_text,
+            is_boss=getattr(template, "is_boss", False),
         )
 
         # Scale stats by level

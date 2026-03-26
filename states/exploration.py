@@ -385,6 +385,24 @@ class ExplorationState(GameState):
             self._generate_floor()
 
     def _start_combat(self, enemies: list[Enemy]) -> None:
+        # Check if this is a boss fight — show cinematic cutscene
+        boss_enemy = None
+        for e in enemies:
+            if getattr(e, "is_boss", False):
+                boss_enemy = e
+                break
+
+        if boss_enemy:
+            from states.boss_cutscene import BossCutsceneState
+
+            self.game.add_log(
+                f"[bold bright_red]A powerful presence blocks your path...[/bold bright_red]"
+            )
+            self.game.state_manager.push(
+                BossCutsceneState(self.game, boss_enemy.name, enemies)
+            )
+            return
+
         from states.combat_state import CombatState
 
         names = ", ".join(e.name for e in enemies)
