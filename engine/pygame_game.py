@@ -52,6 +52,7 @@ class PygameGame(BaseGame):
         self.running = True
         clock = pygame.time.Clock()
         last_time = time.perf_counter()
+        _last_state_name = ""
 
         try:
             while self.running:
@@ -78,6 +79,12 @@ class PygameGame(BaseGame):
                     if key is None:
                         break
                     state.handle_input(key)
+
+                # 2b. Auto-switch music when state changes
+                state_name = type(state).__name__
+                if state_name != _last_state_name:
+                    _last_state_name = state_name
+                    self.sound.play_music_for_state(state_name)
 
                 # 3. Update
                 state.update(dt)

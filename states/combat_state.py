@@ -71,6 +71,14 @@ class CombatState(GameState):
         )
         self.game.event_bus.emit("combat_start", enemies=self.enemies)
         self.transition_manager.start(FlashTransition(duration=0.2, color="bright_red"))
+
+        # Play boss music if fighting a boss
+        sound = getattr(self.game, "sound", None)
+        if sound:
+            is_boss = any(getattr(e, "is_boss", False) for e in self.enemies)
+            if is_boss:
+                sound.play_music("boss.wav", loop=True)
+
         self._check_turn()
 
     # -- turn flow -----------------------------------------------------
@@ -193,6 +201,10 @@ class CombatState(GameState):
                         if lines:
                             for line in lines:
                                 self.game.add_log(f"[bold bright_yellow]{line}[/bold bright_yellow]")
+                            # Voice narrate the boss dialogue
+                            sound = getattr(self.game, "sound", None)
+                            if sound and hasattr(sound, "speak"):
+                                sound.speak(". ".join(lines))
 
             if result.get("damage", 0) > 0:
                 self.animation_manager.add(

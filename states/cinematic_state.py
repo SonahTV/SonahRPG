@@ -108,6 +108,11 @@ class CinematicState(GameState):
                 self.game.add_log(msg)
 
     def _advance_page(self) -> None:
+        # Stop any ongoing narration when skipping ahead
+        sound = getattr(self.game, "sound", None)
+        if sound and hasattr(sound, "stop_speaking"):
+            sound.stop_speaking()
+
         self.current_page += 1
         if self.current_page >= len(self.pages):
             self._finish()
@@ -125,6 +130,13 @@ class CinematicState(GameState):
         self.choice_made = False
         self.choice_response = ""
         self.showing_response = False
+
+        # Voice narration: read the page text aloud
+        sound = getattr(self.game, "sound", None)
+        if sound and hasattr(sound, "speak"):
+            page_text = self.pages[self.current_page].get("text", "")
+            if page_text:
+                sound.speak(page_text)
 
     def _finish(self) -> None:
         if self.on_complete:
