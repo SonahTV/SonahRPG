@@ -44,11 +44,8 @@ class SaveManager:
         }
 
         if player is not None:
-            data["player"] = {
-                "name": getattr(player, "name", "Unknown"),
-                "level": getattr(player, "level", 1),
-                "char_class": getattr(player, "char_class", "Unknown"),
-            }
+            # Full player serialization: stats, inventory, equipment, skills, quests
+            data["player"] = player.to_dict()
 
         # Persist narrative state
         narrative_mgr = getattr(game, "narrative_manager", None)

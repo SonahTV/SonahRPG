@@ -312,8 +312,8 @@ class LoreState(GameState):
                         break
                 if not entry_data:
                     continue
-                prefix = ">" if i == self.journal_selected else " "
-                color = get_rgb("bright_yellow") if i == self.journal_selected else get_rgb("white")
+                prefix = ">" if i == self.selected_index else " "
+                color = get_rgb("bright_yellow") if i == self.selected_index else get_rgb("white")
                 text = f"  {prefix} {entry_data.get('title', lore_id)}"
                 surface.blit(font.render_text(text, color), (margin, y))
                 y += font.char_height + 2

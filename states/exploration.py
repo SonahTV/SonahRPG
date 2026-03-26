@@ -552,6 +552,7 @@ class ExplorationState(GameState):
         map_surf = self._pg_map.render(
             floor, player, self.enemies_on_floor, self.items_on_ground,
             font, renderer.map_rect.width, renderer.map_rect.height,
+            npcs=self.npcs_on_floor,
         )
         stats_surf = self._pg_stats.render(
             player, font, renderer.stats_rect.width, renderer.stats_rect.height,
@@ -560,6 +561,7 @@ class ExplorationState(GameState):
             floor, player.x, player.y,
             enemies=self.enemies_on_floor,
             items_on_ground=self.items_on_ground,
+            npcs=self.npcs_on_floor,
             width=renderer.minimap_rect.width,
             height=renderer.minimap_rect.height,
         )

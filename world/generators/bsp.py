@@ -213,13 +213,16 @@ def generate_bsp(
     floor.stairs_down = (dx, dy)
 
     # ---- Enemy spawns ----
-    enemies_per_room_min = 1 + floor_number // 3
-    enemies_per_room_max = 2 + floor_number // 2
+    # Scale gently: 1-2 per room early, 2-4 later, hard cap 4
+    enemies_per_room_min = min(1 + floor_number // 5, 2)
+    enemies_per_room_max = min(2 + floor_number // 4, 4)
+    # Cap total enemies on the floor to keep gameplay tight
+    max_total_enemies = min(8 + floor_number * 3, 50)
     for room in rooms:
+        if len(floor.enemy_spawns) >= max_total_enemies:
+            break
         x1, y1, x2, y2 = room.inner()
-        count = rng.randint(
-            min(enemies_per_room_min, 5), min(enemies_per_room_max, 5)
-        )
+        count = rng.randint(enemies_per_room_min, enemies_per_room_max)
         placed = 0
         attempts = 0
         while placed < count and attempts < count * 10:

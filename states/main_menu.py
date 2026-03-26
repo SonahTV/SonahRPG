@@ -259,6 +259,17 @@ class MainMenuState(GameState):
                 from states.exploration import ExplorationState
 
                 self.game.player = Player.from_dict(data["player"])
+
+                # Restore narrative state
+                from systems.narrative_manager import NarrativeManager
+
+                if "narrative" in data:
+                    self.game.narrative_manager = NarrativeManager.from_dict(
+                        data["narrative"], self.game
+                    )
+                else:
+                    self.game.narrative_manager = NarrativeManager(self.game)
+
                 self.game.add_log("[bold green]Game loaded successfully![/bold green]")
                 self.game.state_manager.replace(ExplorationState(self.game))
             else:

@@ -11,7 +11,7 @@ class PgMinimap:
         self.scale = 3  # pixels per tile
 
     def render(self, dungeon_floor, player_x: int, player_y: int,
-               enemies=None, items_on_ground=None,
+               enemies=None, items_on_ground=None, npcs=None,
                width: int = 200, height: int = 150) -> pygame.Surface:
         surface = pygame.Surface((width, height))
         surface.fill((5, 5, 10))
@@ -70,6 +70,13 @@ class PgMinimap:
             sy = offset_y + iy * self.scale
             if 0 <= sx < width and 0 <= sy < height:
                 pygame.draw.rect(surface, (255, 255, 50), (sx, sy, self.scale, self.scale))
+
+        # Draw NPCs (cyan dots)
+        for npc in (npcs or []):
+            nx = offset_x + getattr(npc, "x", 0) * self.scale
+            ny = offset_y + getattr(npc, "y", 0) * self.scale
+            if 0 <= nx < width and 0 <= ny < height:
+                pygame.draw.rect(surface, (50, 220, 220), (nx, ny, self.scale, self.scale))
 
         # Draw player (pulsing)
         t = time.time()

@@ -33,7 +33,8 @@ class PgMapView:
         self.camera_y = py
 
     def render(self, dungeon_floor, player, enemies, items_on_ground,
-               font: FontManager, width: int, height: int) -> pygame.Surface:
+               font: FontManager, width: int, height: int,
+               npcs=None) -> pygame.Surface:
         """Render visible map area to a surface."""
         surface = pygame.Surface((width, height))
         surface.fill((0, 0, 0))
@@ -60,6 +61,10 @@ class PgMapView:
             ix = it.get("x", -1) if isinstance(it, dict) else getattr(it, "x", -1)
             iy = it.get("y", -1) if isinstance(it, dict) else getattr(it, "y", -1)
             item_positions.add((ix, iy))
+
+        npc_map = {}
+        for npc in (npcs or []):
+            npc_map[(getattr(npc, "x", -1), getattr(npc, "y", -1))] = npc
 
         t = time.time() - self._start_time
 
@@ -92,6 +97,12 @@ class PgMapView:
                         epulse = math.sin(t * 4.0 + hash(id(enemy)) * 0.7)
                         fg = (255, 85, 85) if epulse > 0.2 else (170, 0, 0) if epulse > -0.2 else (128, 0, 0)
                         surface.blit(font.render_glyph(glyph, fg, (18, 18, 18)), (px_x, px_y))
+                        continue
+                    if pos in npc_map:
+                        # NPCs: friendly cyan, pulsing
+                        npulse = math.sin(t * 2.0)
+                        nc = (85, 255, 255) if npulse > 0 else (0, 200, 200)
+                        surface.blit(font.render_glyph("@", nc, (18, 18, 18)), (px_x, px_y))
                         continue
                     if pos in item_positions:
                         sparkle = math.sin(t * 5.0 + mx * 3.1 + my * 7.7)
